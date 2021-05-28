@@ -1,0 +1,47 @@
+S->E 
+E->F E 
+E->P E 
+E->G E 
+E->R E 
+E->W E 
+E->V N ; E 
+E-># 
+L->, id L 
+L->= Y 
+L-># 
+Y->V X 
+V->id 
+V->num 
+V->( Y ) 
+V->! V 
+X-># 
+X->+ V X 
+X->- V X 
+X->& V X 
+X->| V X 
+X->&& V X 
+X->|| V X 
+X->!= V X 
+X->== V X 
+X->> V X 
+X->>= V X 
+X->< V X 
+X-><= V X 
+R->if ( Y ) { E } ; A 
+A->else { E } ; 
+A-># 
+W->while ( Y ) { E } ; 
+P->put ( V ) ; 
+G->get ( id L ) ; 
+F->int id N ; 
+F->bool id N ; 
+N->L 
+N->( M ) 
+M->id L 
+M-># 
+M->int id O 
+O->, int id O 
+O-># 
+N-># 
+E->T E 
+T->struct id { E } ; 

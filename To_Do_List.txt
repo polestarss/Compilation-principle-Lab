@@ -1,0 +1,234 @@
+词法分析部分
+1、记录符号个数
+一共有几类？
+
+
+3、id的问题，在输出的时候使用id，而不是token，属性应为地址
+4、对getChar进行优化，begin指针可以不使用     此处需要优化，不一定要按行读取
+5、处理错误的时候就是简单的跳过一个字符   不知道哪种方式是正确的
+
+
+记录笔记：
+1、sprintf可以将整数输出为字符串进入某个字符数组
+
+
+注意事项：
+1、记录移位运算符格式，<shift,<<>
+2、记录运算符，包括算数运算符，逻辑运算符，自增运算符，自减运算符      <operator,++>
+3、state20 处理八进制数和十六进制数
+
+
+语法分析部分
+采用正规文法
+规定：
+
+非终结符：大写字母'A'~'Z'
+终结符：除大写字母之外的所有字符
+空串：#
+符号栈终止符：$
+规定第一个产生式的左边那个非终结符就是开始符号
+输入的产生式需要分开写(比如A->a|b, 要输入A->a和A->b才能处理)
+
+产生式右部改用字符数组
+
+求first集：
+    1、产生式右边第一个字符是终结符
+    2、寻找到产生式右边第一个不能推导出空串的非终结符，将他的first加入此字符first
+    3、如果在找到2所需非终结符前先找到终结符则将其加入first
+
+
+
+
+改词法分析输出：
+1、关键字暂时不改
+2、
+
+
+S->E 
+E->F E 
+E->P E 
+E->G E 
+E->R E 
+E->W E 
+E->N E 
+E-># 
+L->, id L 
+L->= Y 
+L-># 
+Y->V X 
+V->id 
+V->num 
+V->( Y ) 
+V->! V 
+X-># 
+X->+ V X 
+X->- V X 
+X->& V X 
+X->| V X 
+X->== V X 
+X->> V X 
+X->>= V X 
+X->< V X 
+X-><= V X 
+R->if ( Y ) { E } ; A 
+A->else { E } ; 
+A-># 
+W->while ( Y ) { E } ; 
+P->put ( V ) ; 
+G->get ( id L ) ; 
+F->id = Y ; 
+F->int id L ; 
+F->bool id L ;
+
+
+//输入数据num1,num2,op，根据op确定操作进行运算，最后输出运算结果ans
+int num1,num2,op,ans;
+get(num1,num2,op);
+if(op==0)
+{
+    ans = num1 + num2;
+};
+if(op==1)
+{
+    ans = num1 - num2;
+};
+else
+{
+    ans = 10;
+};
+if(op==2)
+{
+    ans = num1 & num2;
+};
+if(op==3)
+{
+    ans = num1 | num2;
+};
+put(ans);
+
+int num0,num1,out,op;
+num1 = 3333;
+num2 = 6666;
+num3 = 9999;
+op = 1;
+while(op>0)
+{
+    if(op==1)
+    {
+         out = num1;
+    };
+    if(op==2)
+    {
+         out = num2;
+    };
+    if(op==2)
+    {
+         out = num3;
+    };
+    put(out);
+    get(op);
+};
+
+S->E 
+E->F E 
+E->P E 
+E->G E 
+E->R E 
+E->W E 
+E->id N E
+E-># 
+L->, id L 
+L->= Y 
+L-># 
+Y->V X 
+V->id 
+V->num 
+V->( Y ) 
+V->! V 
+X-># 
+X->+ V X 
+X->- V X 
+X->& V X 
+X->| V X 
+X->&& V X 
+X->|| V X 
+X->!= V X 
+X->== V X 
+X->> V X 
+X->>= V X 
+X->< V X 
+X-><= V X 
+R->if ( Y ) { E } ; A 
+A->else { E } ; 
+A-># 
+W->while ( Y ) { E } ; 
+P->put ( V ) ; 
+G->get ( id L ) ; 
+F->int id L ; 
+F->bool id L ;
+N->( M ) ;  
+N->L ; 
+M->id L 
+M-># 
+
+
+int x ,y;
+x = 1;
+y = 1;
+testSample(x,y);
+if(x == 1)
+{
+    y = 2;
+};
+else
+{
+    y = 0;
+}
+
+TO DO：
+语义分析第190行，写int x = 1;  case 8 
+nowFather是乱用的
+
+
+S->E         ok
+E->F E       ok
+E->P E       ok
+E->G E       ok
+E->R E       ok
+E->W E       ok
+E->V N E     ok
+E->#         ok
+L->, id L    ok
+L->= Y       ok
+L->#         ok
+Y->V X       ok
+V->id        ok
+V->num       ok
+V->( Y )     ok
+V->! V       ok
+X->#         ok
+X->+ V X     ok
+X->- V X     ok
+X->& V X     ok
+X->| V X     ok
+X->&& V X    ok
+X->|| V X    ok
+X->!= V X    ok
+X->== V X    ok
+X->> V X     ok
+X->>= V X    ok
+X->< V X     ok
+X-><= V X    ok
+R->if ( Y ) { E } ; A       ok
+A->else { E } ;             ok
+A->#                        ok
+W->while ( Y ) { E } ;      ok
+P->put ( V ) ;              ok
+G->get ( id L ) ;           ok
+F->int id L ;               ok
+F->bool id L ;              ok
+N->( M ) ; 
+N->L ;                      ok
+M->id L 
+M-># 
+
