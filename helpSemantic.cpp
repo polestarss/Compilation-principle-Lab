@@ -704,11 +704,11 @@ Gnode FxX(treeNode nowNode,Gnode leftNode)
         nowRoot->child.push_back(childV);
     
     //检查类型  只有int才能参与算术运算
-    if(nowRoot->type == "arithmetic" && (childV->type != "int" || leftNode->type != "int"))
-    {
-        cout<<"只有整数才能参与算数运算"<<endl;
-        exit(0);
-    }
+    // if(nowRoot->type == "arithmetic" && (childV->type != "int" || leftNode->type != "int"))
+    // {
+    //     cout<<"只有整数才能参与算数运算"<<endl;
+    //     exit(0);
+    // }
     // if(nowRoot->type == "logic" && (childV->type != "bool" || leftNode->type != "bool"))
     // {
     //     cout<<"只有布尔型才能参与逻辑运算"<<endl;
