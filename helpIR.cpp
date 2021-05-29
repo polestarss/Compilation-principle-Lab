@@ -164,6 +164,7 @@ int addCompute(Gnode ComputeTree)  //算术和逻辑运算语句 返回临时变
     IRtable[IRnum].resultIndex = resultIndex;
     IRnum++;
     return resultIndex;
+    
 }
 
 
