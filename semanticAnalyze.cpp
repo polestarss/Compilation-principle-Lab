@@ -4,7 +4,7 @@
 // #include "helpLex.cpp"
 // #include "helpPaser.cpp"
 // #include "grammerAnalyze.cpp"
-int main()
+void semainticAnalyze()
 {
     grammerAnalyze();
     init();
