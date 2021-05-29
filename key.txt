@@ -5,3 +5,5 @@
     [remote "origin"]
 	url = https://github.com/xiaocainiaodd/Compilation-principle-Lab.git
 	fetch = +refs/heads/*:refs/remotes/origin/*
+url = https://github.com/xiaocainiaodd/Compilation-principle-Lab.git
+url = https://xiaocainiaodd:woshishen123@@github.com/xiaocainiaodd/Compilation-principle-Lab.git

@@ -136,7 +136,6 @@ vector<Gnode> FxE(treeNode nowNode)  //翻译E
                 equalSetence.push_back(temp[i]);
             return equalSetence;
         }
-        
         case 2: //E->PE
         {
             vector<Gnode> equalSetence;
@@ -150,7 +149,6 @@ vector<Gnode> FxE(treeNode nowNode)  //翻译E
                 equalSetence.push_back(temp[i]);
             return equalSetence;
         }
-
         case 3: //E->GE
         {
             vector<Gnode> equalSetence;
@@ -164,12 +162,10 @@ vector<Gnode> FxE(treeNode nowNode)  //翻译E
                 equalSetence.push_back(temp[i]);
             return equalSetence;
         }
-
         case 4: // E->R E 
         {
             vector<Gnode> equalSetence;
             Gnode nowRoot = new grammerNode;
-
             nowRoot = FxR(nowNode->child[0]);
             equalSetence.push_back(nowRoot);
             vector<Gnode> temp;
@@ -178,12 +174,10 @@ vector<Gnode> FxE(treeNode nowNode)  //翻译E
                 equalSetence.push_back(temp[i]);
             return equalSetence;
         }
-
         case 5: //E-> W E
         {
             vector<Gnode> equalSetence;
             Gnode nowRoot = new grammerNode;
-
             nowRoot = FxW(nowNode->child[0]);
             equalSetence.push_back(nowRoot);
             vector<Gnode> temp;
@@ -264,7 +258,6 @@ vector<Gnode> FxE(treeNode nowNode)  //翻译E
 Gnode FxF(treeNode nowNode)    //翻译非终结符F
 {
     int index = nowNode->productionIndex;
-    cout<<index<<"    hahahaha"<<endl;
     switch (index)
     {
         case 35:    //F->int id N; 变量申明语句 或函数声明
@@ -273,7 +266,6 @@ Gnode FxF(treeNode nowNode)    //翻译非终结符F
             int childIndex = nowNode->child[2]->productionIndex;
             if(childIndex == 38) //函数声明
             {
-                
                 //处理int
                 Gnode nowRoot = new grammerNode; 
                 nowRoot->name = "functdefine";
@@ -288,7 +280,6 @@ Gnode FxF(treeNode nowNode)    //翻译非终结符F
                 bool exist = checkVariable("functName",value);
                 // if(exist && !isStruct)
                 if(exist )
-
                 {
                     cout<<"变量或函数重复申明!"<<"  行数为："<<row<<endl;
                     exit(0);
@@ -348,7 +339,6 @@ Gnode FxF(treeNode nowNode)    //翻译非终结符F
         case 36: //F->bool id L
         {
             //处理bool
-            cout<<"shahahah"<<endl;
             Gnode nowRoot = new grammerNode; 
             nowRoot->name = "bool";
             nowRoot->type ="keyWord";
