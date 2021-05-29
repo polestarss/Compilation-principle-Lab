@@ -6,7 +6,9 @@
 void addAssign(Gnode AssignTree);  //赋值语句
 void addState(Gnode StateTree);    //变量声明
 int addCompute(Gnode AssignTree);  //算术运算语句
-
+void addIf(Gnode IfTree);         //if语句
+void addWhile(Gnode WhileTree); //while语句
+void addIR(Gnode root);        //生成所有三地址语句
 
 
 const int maxQuaternion = 1024;
@@ -45,7 +47,19 @@ string getNodeType(Gnode testNode)
         return "logic";
     return "wrong";
 }
-
+void addIR(vector<Gnode> equalSetence)
+{
+    int size = equalSetence.size();
+    for(int i=0;i<size;i++)
+    {
+        if(equalSetence[i]->name == "=")
+            addAssign(equalSetence[i]);
+        else if(equalSetence[i]->name =="int" || equalSetence[i]->name == "bool")
+            addState(equalSetence[i]);
+        else if(equalSetence[i]->name =="if-then-else")
+            addIf(equalSetence[i]);
+    }
+}
 void addState(Gnode StateTree)    //变量声明
 {
     string type = StateTree->type;
@@ -164,10 +178,29 @@ int addCompute(Gnode ComputeTree)  //算术和逻辑运算语句 返回临时变
     IRtable[IRnum].resultIndex = resultIndex;
     IRnum++;
     return resultIndex;
-    
+
 }
 
+void addIf(Gnode IfTree)
+{
+    int size = IfTree->child.size();
+    Gnode ifCondition = IfTree->child[0];
+    //条件判断部分
+    int conditionIndex = addCompute(ifCondition->child[0]);  //arg1
+    IRtable[IRnum].id = IRnum;
+    IRtable[IRnum].op ="if";
+    IRtable[IRnum].arg1Index = conditionIndex;
+    IRtable[IRnum].arg2Index = 0;            //如果条件为假，则goto else
+    IRtable[IRnum].isArg1Num = false;
+    IRtable[IRnum].isArg2Num = true;
+    int conditionId = IRnum;                  //结果等待回填
+    IRnum++;
 
+    //处理then
+    
+
+
+}
 
 
 

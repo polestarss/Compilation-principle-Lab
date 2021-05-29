@@ -82,6 +82,10 @@ F->bool id L ;
 
 
 //输入数据num1,num2,op，根据op确定操作进行运算，最后输出运算结果ans
+
+op == 1 || op == 2;
+
+
 int num1,num2,op,ans;
 get(num1,num2,op);
 if(op==0)

@@ -1,6 +1,8 @@
 int num1,num2,op,ans;
 get(num1,num2,op);
-if(op==0)
+bool test1;
+test1 = op == 1 || op == 2;
+if((op == 0) || (op == 1))
 {
     ans = num1 + num2 + 1;
     ans = 1 + (2 + 3) + 4;
