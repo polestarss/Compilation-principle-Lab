@@ -23,8 +23,11 @@ struct tester
 };
 int main()
 {
-	
-
+    int Ti = 0;
+	string result = "t";
+    char idT = Ti + '0';
+    result += idT;
+    cout<<result;
 
 
 }
