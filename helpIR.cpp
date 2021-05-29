@@ -8,8 +8,9 @@ void addState(Gnode StateTree);    //变量声明
 int addCompute(Gnode AssignTree);  //算术运算语句
 void addIf(Gnode IfTree);         //if语句
 void addWhile(Gnode WhileTree); //while语句
+void addGet(Gnode GetTree); //get语句
+void addPut(Gnode PutTree); //put语句
 void addIR(Gnode root);        //生成所有三地址语句
-
 
 const int maxQuaternion = 1024;
 int IRnum = 0;         //四元式的数量
@@ -58,6 +59,13 @@ void addIR(vector<Gnode> equalSetence)
             addState(equalSetence[i]);
         else if(equalSetence[i]->name =="if-then-else")
             addIf(equalSetence[i]);
+        else if(equalSetence[i]->name =="while")
+            addWhile(equalSetence[i]);
+        else if(equalSetence[i]->name =="get")
+            addGet(equalSetence[i]);
+        else if(equalSetence[i]->name =="put")
+            addPut(equalSetence[i]);
+        
     }
 }
 void addState(Gnode StateTree)    //变量声明
@@ -196,20 +204,92 @@ void addIf(Gnode IfTree)
     int conditionId = IRnum;                  //结果等待回填
     IRnum++;
 
-    //处理then
-    
+    //处理then,在最后加一个跳转到外面的出口
+    addIR(IfTree->child[1]->child);
+    IRtable[IRnum].id = IRnum;
+    IRtable[IRnum].op ="goto";
+    int thenIndex = IRnum;        //等待结果回填
+    IRnum++;
+    //处理else
+    //首先回填if条件中的转移地址
+    IRtable[conditionId].resultIndex = IRnum;
+    if(size<3)  //没有else
+    {
+        IRtable[thenIndex].resultIndex = IRnum;
+        return;
+    }
 
+    addIR(IfTree->child[2]->child);
+    IRtable[thenIndex].resultIndex = IRnum;
+    return;
 
 }
 
+void addWhile(Gnode WhileTree)
+{   
+    Gnode whileCondition = WhileTree->child[0];
+    int loopIndex = IRnum;  //循环变量的判断
 
+    int conditionIndex = addCompute(whileCondition->child[0]);
+    IRtable[IRnum].id = IRnum;
+    IRtable[IRnum].op ="if";
+    IRtable[IRnum].arg1Index = conditionIndex;
+    IRtable[IRnum].arg2Index = 0;            //如果条件为假，则goto 外面
+    IRtable[IRnum].isArg1Num = false;
+    IRtable[IRnum].isArg2Num = true;
+    int conditionId = IRnum;                  //结果等待回填
+    IRnum++;
+    
+    addIR(WhileTree->child[1]->child);
+    IRtable[IRnum].id = IRnum;
+    IRtable[IRnum].op ="goto";
+    IRtable[IRnum].resultIndex = loopIndex;    //goto loop
+    IRnum++; 
+    IRtable[conditionId].resultIndex = IRnum; //goto 外面
 
+}
 
+void addGet(Gnode GetTree)
+{
+    int size = GetTree->child.size();
+    for(int i = 0; i < size;i++)
+    {
+        int index = findArgIndex(GetTree->child[i]->name);
+        IRtable[IRnum].id = IRnum;
+        IRtable[IRnum].op = "get";
+        IRtable[IRnum].arg1Index = index;
+        IRnum++;
+    }
+}
 
+void addPut(Gnode PutTree)
+{
+    int size = PutTree->child.size();
+    for(int i = 0; i < size;i++)
+    {
+        int index = findArgIndex(PutTree->child[i]->name);
+        IRtable[IRnum].id = IRnum;
+        IRtable[IRnum].op = "put";
+        IRtable[IRnum].arg1Index = index;
+        IRnum++;
+    }
+}
 
-
-
-
-
+void printIR()
+{
+    cout<<setw(5)<<"id"<<setw(5)<<"op"<<setw(5)<<"arg1Index"<<setw(5)<<"arg2Index"<<setw(5)\
+    <<"resultIndex"<<setw(5)<<"isArg1Num"<<setw(5)<<"isArg2Num"<<endl;
+    for(int i = 0; i <IRnum-1;i++)
+    {
+        cout<<setw(5)<<IRtable[i].id\
+        <<setw(5)<<IRtable[i].op\
+        <<setw(5)<<IRtable[i].arg1Index\
+        <<setw(5)<<IRtable[i].arg2Index\
+        <<setw(5)<<IRtable[i].resultIndex\
+        <<setw(5)<<IRtable[i].isArg1Num\
+        <<setw(5)<<IRtable[i].isArg2Num\
+        <<endl;
+    }
+}
 
 #endif // 

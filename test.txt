@@ -1,26 +1,22 @@
-int num1,num2,op,ans;
-get(num1,num2,op);
-bool test1;
-test1 = op == 1 || op == 2;
-if((op == 0) || (op == 1))
+int num0,num1,num2,num3,out,op;
+num1 = 3333;
+num2 = 6666;
+num3 = 9999;
+op = 1;
+while(op>0)
 {
-    ans = num1 + num2 + 1;
-    ans = 1 + (2 + 3) + 4;
+    if(op==1)
+    {
+         out = num1;
+    };
+    if(op==2)
+    {
+         out = num2;
+    };
+    if(op==2)
+    {
+         out = num3;
+    };
+    put(out);
+    get(op);
 };
-if(op==1)
-{
-    ans = num1 - num2;
-};
-else
-{
-    ans = 10;
-};
-if(op==2)
-{
-    ans = num1 & num2;
-};
-if(op==3)
-{
-    ans = num1 | num2;
-};
-put(ans);

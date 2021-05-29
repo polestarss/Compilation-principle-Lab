@@ -236,3 +236,33 @@ N->L ;                      ok
 M->id L 
 M-># 
 
+
+int num1,num2,op,ans;
+get(num1,num2,op);
+bool test1;
+test1 = op == 1 || op == 2;
+if((op == 0) || (op == 1))
+{
+    ans = num1 + num2 + 1;
+    ans = 1 + (2 + 3) + 4;
+};
+if(op==1)
+{
+    ans = num1 - num2;
+};
+else
+{
+    ans = 10;
+};
+if(op==2)
+{
+    ans = num1 & num2;
+};
+if(op==3)
+{
+    ans = num1 | num2;
+};
+put(ans);
+
+
+处理IR表的最后一行

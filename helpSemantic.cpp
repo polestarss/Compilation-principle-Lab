@@ -326,8 +326,6 @@ Gnode FxF(treeNode nowNode)    //翻译非终结符F
                 nodeTemp1->name =  property;
                 nowTemp->child.push_back(nodeTemp1);    //挂载节点
                 //处理L
-                cout<<"ahahahah"<<endl;
-                cout<<nowTemp->name<<"  ssasda"<<endl;
                 nowNode = nowNode->child[2];
                 Gnode waste = FxN(nowNode,property);
                 return nowTemp;
@@ -415,20 +413,17 @@ Gnode FxL(treeNode nowNode,string I)
             //寻找右子树
             nowNode = nowNode->child[1];
             Gnode subTree = FxY(nowNode);
-
             //做赋值类型检查
-            // if(type == "int" && (subTree->type != "arithmetic" && subTree->type != "int"))
-            // {
-            //     cout<<"整型赋值错误"<<" 行数为："<<row<<endl;
-            //     exit(0);
-            // }
-            // if(type == "bool" && (subTree->type != "logic" && subTree->type != "bool"))
-            // {
-            //     cout<<"布尔型赋值错误"<<" 行数为："<<row<<endl;
-            //     exit(0);
-            // }
-
-
+            if(type == "int" && (subTree->type != "arithmetic" && subTree->type != "int"))
+            {
+                cout<<"整型赋值错误"<<" 行数为："<<row<<endl;
+                exit(0);
+            }
+            if(type == "bool" && (subTree->type != "logic" && subTree->type != "bool"))
+            {
+                cout<<"布尔型赋值错误"<<" 行数为："<<row<<endl;
+                exit(0);
+            }
             nowRoot->child.push_back(subTree);
             return nowRoot;
         }
