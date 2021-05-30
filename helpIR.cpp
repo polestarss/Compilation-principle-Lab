@@ -38,7 +38,24 @@ int findArgIndex(string arg)     //寻找参数在符号表中位置
     exit(0);
     
 }
-
+bool addMiddleVariable(string type,string property)
+{
+    bool flag = false;
+    for(int i=0;i<notationNum;i++)
+        if(notationTable[i].name == property)
+            flag = true;
+    if(!flag)    //如果没有直接添加
+    {
+        if(isStruct)
+            notationTable[notationNum].isStructParam = 1;
+        else
+            notationTable[notationNum].isStructParam = 0;
+        notationTable[notationNum].type = type;
+        notationTable[notationNum].name = property;
+        notationNum++;
+    }
+    return flag;
+}
 string getNodeType(Gnode testNode)
 {
     string name = testNode->name;
@@ -70,12 +87,12 @@ void addIR(vector<Gnode> equalSetence)
 }
 void addState(Gnode StateTree)    //变量声明
 {
-    string type = StateTree->type;
+    string name = StateTree->name;
     for(int i=0;i<StateTree->child.size();i++)
     {
         int index = findArgIndex(StateTree->child[i]->name);
         IRtable[IRnum].id = IRnum;
-        IRtable[IRnum].op = type;
+        IRtable[IRnum].op = name;
         IRtable[IRnum].arg1Index = index;
         IRnum++;
     }
@@ -86,7 +103,7 @@ void addAssign(Gnode AssignTree)  //赋值语句
     Gnode resultNode = AssignTree->child[0];  //左边是结果
     string result = resultNode->name;
     int resultIndex = findArgIndex(result);
-
+    // cout<<"addAssign1"<<endl;
     Gnode computeNode = AssignTree->child[1];
     string rightType = getNodeType(computeNode);
     string rightName = computeNode->name;
@@ -95,8 +112,11 @@ void addAssign(Gnode AssignTree)  //赋值语句
     bool isArg1Num = false;
     if(rightType == "Arithmetic" || rightType == "logic") //右边是运算子树
         arg1Index = addCompute(computeNode);
-    else if(rightName[0]>'a' && rightName[0]>'z' || rightName[0]>'A' || rightName[0]<'Z') //如果右边是变量
+    else if((rightName[0]>='a' && rightName[0]<='z') || (rightName[0]>='A' && rightName[0]<='Z')) //如果右边是变量
+    {
+        // cout<<rightName[0]<<endl;
         arg1Index = findArgIndex(rightName);
+    }
     else  //右边是数字
     {
         arg1Index = atoi(rightName.c_str());
@@ -160,12 +180,21 @@ int addCompute(Gnode ComputeTree)  //算术和逻辑运算语句 返回临时变
     Ti++;
     string opType = getNodeType(ComputeTree);
     bool exist;
+    cout<<opType<<endl;
     if(opType == "Arithmetic")
-        exist = checkVariable("int",result);
+    {
+    
+        exist = addMiddleVariable("int",result);
+    }
+        
     else if(opType == "logic")
-        exist = checkVariable("bool",result);
+    {
+        exist = addMiddleVariable("bool",result);
+        cout<<result<<endl;
+    }
+        
     if(exist) {
-        cout<<"生成中间结果错误"<<endl;
+        cout<<"生成中间结果变量错误"<<endl;
         exit(0);
     }
 
@@ -277,17 +306,17 @@ void addPut(Gnode PutTree)
 
 void printIR()
 {
-    cout<<setw(5)<<"id"<<setw(5)<<"op"<<setw(5)<<"arg1Index"<<setw(5)<<"arg2Index"<<setw(5)\
-    <<"resultIndex"<<setw(5)<<"isArg1Num"<<setw(5)<<"isArg2Num"<<endl;
-    for(int i = 0; i <IRnum-1;i++)
+    cout<<setw(15)<<"id"<<setw(15)<<"op"<<setw(15)<<"arg1Index"<<setw(15)<<"arg2Index"<<setw(15)\
+    <<"resultIndex"<<setw(15)<<"isArg1Num"<<setw(15)<<"isArg2Num"<<endl;
+    for(int i = 0; i <IRnum;i++)
     {
-        cout<<setw(5)<<IRtable[i].id\
-        <<setw(5)<<IRtable[i].op\
-        <<setw(5)<<IRtable[i].arg1Index\
-        <<setw(5)<<IRtable[i].arg2Index\
-        <<setw(5)<<IRtable[i].resultIndex\
-        <<setw(5)<<IRtable[i].isArg1Num\
-        <<setw(5)<<IRtable[i].isArg2Num\
+        cout<<setw(15)<<IRtable[i].id\
+        <<setw(15)<<IRtable[i].op\
+        <<setw(15)<<IRtable[i].arg1Index\
+        <<setw(15)<<IRtable[i].arg2Index\
+        <<setw(15)<<IRtable[i].resultIndex\
+        <<setw(15)<<IRtable[i].isArg1Num\
+        <<setw(15)<<IRtable[i].isArg2Num\
         <<endl;
     }
 }

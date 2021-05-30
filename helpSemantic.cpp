@@ -313,7 +313,6 @@ Gnode FxF(treeNode nowNode)    //翻译非终结符F
                 string value = nowNode->child[1]->value;//得到id属性
                 int row = nowNode->child[1]->row;
                 bool exist = checkVariable("int",value);
-                // if(exist && !isStruct)
                 if(exist)
                 {
                     cout<<"变量或函数重复申明!"<<"  行数为："<<row<<endl;
@@ -414,16 +413,16 @@ Gnode FxL(treeNode nowNode,string I)
             nowNode = nowNode->child[1];
             Gnode subTree = FxY(nowNode);
             //做赋值类型检查
-            if(type == "int" && (subTree->type != "arithmetic" && subTree->type != "int"))
-            {
-                cout<<"整型赋值错误"<<" 行数为："<<row<<endl;
-                exit(0);
-            }
-            if(type == "bool" && (subTree->type != "logic" && subTree->type != "bool"))
-            {
-                cout<<"布尔型赋值错误"<<" 行数为："<<row<<endl;
-                exit(0);
-            }
+            // if(type == "int" && (subTree->type != "arithmetic" && subTree->type != "int"))
+            // {
+            //     cout<<"整型赋值错误"<<" 行数为："<<row<<endl;
+            //     exit(0);
+            // }
+            // if(type == "bool" && (subTree->type != "logic" && subTree->type != "bool"))
+            // {
+            //     cout<<"布尔型赋值错误"<<" 行数为："<<row<<endl;
+            //     exit(0);
+            // }
             nowRoot->child.push_back(subTree);
             return nowRoot;
         }
@@ -458,7 +457,6 @@ Gnode FxV(treeNode nowNode)
         case 13: //V->num        现在只有int
         {
             string value = nowNode->child[0]->value;
-            cout<<"value:"<<value<<endl;
             Gnode nodeTemp1 = new grammerNode;
             nodeTemp1->type = "int";
             nodeTemp1->name = value;
@@ -704,9 +702,14 @@ Gnode FxX(treeNode nowNode,Gnode leftNode)
     //     cout<<"只有整数才能参与算数运算"<<endl;
     //     exit(0);
     // }
-    // if(nowRoot->type == "logic" && (childV->type != "bool" || leftNode->type != "bool"))
+    // if(nowRoot->type != "logic" && childV->type == "bool" )
     // {
-    //     cout<<"只有布尔型才能参与逻辑运算"<<endl;
+    //     cout<<"布尔型只能参与逻辑运算"<<endl;
+    //     exit(0);
+    // }
+     // if(nowRoot->type == "logic" && (childV->type != "bool" || leftNode->type != "bool"))
+    // {
+    //     cout<<"布尔型只能参与逻辑运算"<<endl;
     //     exit(0);
     // }
     
@@ -849,7 +852,6 @@ Gnode FxT(treeNode nowNode)
     Gnode nowRoot = new grammerNode;
     nowRoot->name = "struct";
     nowRoot->type = "keyWords";
-
     Gnode nodeName = new grammerNode;
     string value = nowNode->child[1]->value;
     int row = nowNode->child[1]->row;
@@ -864,16 +866,12 @@ Gnode FxT(treeNode nowNode)
     }
     nodeName->name = property;
     nowRoot->child.push_back(nodeName);
-
     isStruct = true;
     vector<Gnode> variableState = FxE(nowNode->child[3]);
     for(int i=0;i<variableState.size();i++)
         nowRoot->child.push_back(variableState[i]);
     isStruct = false;
     return nowRoot;
-
-
-
 }
 
 

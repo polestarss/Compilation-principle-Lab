@@ -179,7 +179,13 @@ M->#
 int x ,y;
 x = 1;
 y = 1;
-testSample(x,y);
+int testSample(int a,int b);
+testSample(a,b);
+struct Test
+{
+    int m;
+    int n;
+};
 if(x == 1)
 {
     y = 2;
