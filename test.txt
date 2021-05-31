@@ -3,6 +3,7 @@ num1 = 3333;
 num2 = 6666;
 num3 = 9999;
 op = 1;
+op = 1 + 3;
 while(op>0)
 {
     if(op==1)

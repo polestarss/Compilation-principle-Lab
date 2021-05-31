@@ -23,11 +23,12 @@ struct tester
 };
 int main()
 {
-    int Ti = 0;
-	string result = "t";
-    char idT = Ti + '0';
-    result += idT;
-    cout<<result;
-
+    stringstream ss;
+    ss<<5;
+    string test = ss.str();
+    cout<<test<<endl;
+    ss<<10;
+    string a = ss.str();
+    cout<<a<<endl;
 
 }
