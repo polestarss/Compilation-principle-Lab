@@ -1,6 +1,6 @@
 #include "helpIR.cpp"
 
-int main()
+void generateIR()
 {
     semainticAnalyze();
     addIR(AST.root->child);

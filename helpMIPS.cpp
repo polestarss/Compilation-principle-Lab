@@ -19,6 +19,9 @@ struct reg
     int count;     //寄存器计数
 }regTable[maxReg];
 
+
+vector<int> destination;
+
 void VariableInit(int index)  //声明变量
 {
     VariableToReg[VariableNum].index = index;
@@ -28,13 +31,15 @@ void VariableInit(int index)  //声明变量
     {
         temp = regUseNum;
         char id = temp + '0';
-        regName = "$t" + id;
+        regName = "$t";
+        regName += id;
     }   
     else if(regUseNum >=10 && regUseNum <18)
     {
         temp = regUseNum - 10;
         char id = temp + '0';
-        regName = "$s" + id;
+        regName = "$s";
+        regName += id;
     }
     else
     {
@@ -43,7 +48,9 @@ void VariableInit(int index)  //声明变量
     }
     regUseNum++;
     VariableToReg[VariableNum].regName = regName;
+    // cout<<regName<<endl;
     VariableToReg[VariableNum].isValid = true;
+    VariableNum++;
 }
 
 string getReg(int index)  //获取变量存在哪个寄存器中
@@ -51,8 +58,9 @@ string getReg(int index)  //获取变量存在哪个寄存器中
     for(int i=0;i<VariableNum;i++)
         if(VariableToReg[i].isValid && VariableToReg[i].index == index)
             return VariableToReg[i].regName;
-    cout<<"未找到寄存器！错误"<<endl;
-    exit(0);
+    //如果没找到
+    VariableInit(index);
+    return getReg(index);
 }
 
 void generateR_Type(string op,string rs,string rt,string rd)  //生成R型指令
@@ -107,11 +115,16 @@ void generateI_Type(string op,string rs,string rt,string immediate)   //生成I�
     else if(op=="<")
         cout<<"slti "<<rt<<","<<rs<<","<<immediate<<endl;
     else if(op==">")
-        cout<<"slti "<<rt<<","<<immediate<<","<<rs<<endl;
+    {
+        cout<<"addi "<<"$v0,"<<"$zero,"<<immediate<<endl;
+        cout<<"slt "<<rt<<","<<"$v0"<<","<<rs<<endl;
+    }
+        
     else if(op=="==" || op=="!=")
     {
-        cout<<"slti "<<"$v0"<<","<<rs<<","<<immediate<<endl;   
-        cout<<"slti "<<"$v1"<<","<<immediate<<","<<rs<<endl;   
+        cout<<"slti "<<"$v0"<<","<<rs<<","<<immediate<<endl;  
+        cout<<"addi "<<"$v1,"<<"$zero,"<<immediate<<endl; 
+        cout<<"slt "<<"$v1"<<","<<"$v1"<<","<<rs<<endl;   
         cout<<"nor "<<rt<<","<<"$v0"<<","<<"$v1"<<endl;   
     }
     else if(op=="if")
@@ -125,11 +138,37 @@ void generateJ_Type(string op,string immediate)
         cout<<"j "<<immediate<<endl;
 
 }
+void addDestination()
+{   
+    for(int i=0;i<IRnum;i++)
+    {
+        bool flag = false;
+        if(IRtable[i].op == "if" || IRtable[i].op == "goto")
+        {
+            int des = IRtable[i].resultIndex;
+            for(int j=0;j<destination.size();j++)
+            {
+                if(destination[j] == des)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if(!flag)
+                destination.push_back(des);
+        }
+    }
+}
 
 void Compile()    //生成MIPS汇编代码
 {
+    addDestination();
     for(int i=0;i<IRnum;i++)
     {
+        for(int j=0;j<destination.size();j++)
+            if(destination[j] == i)
+                cout<<"position"<<i<<": ";
+    
         string op = IRtable[i].op;
         if(op == "int" || op == "bool")
             VariableInit(IRtable[i].arg1Index);
@@ -150,6 +189,7 @@ void Compile()    //生成MIPS汇编代码
             else if(IRtable[i].isArg1Num && !IRtable[i].isArg2Num)
             {
                 string rs = getReg(IRtable[i].arg2Index);
+                cout<<rs<<" sssss"<<endl;
                 generateI_Type(op,rs,rd,immediate1);
             }
             else if(!IRtable[i].isArg1Num && IRtable[i].isArg2Num)
@@ -173,11 +213,12 @@ void Compile()    //生成MIPS汇编代码
                 ss1<<IRtable[i].arg1Index;
                 string immediate1 = ss1.str();
                 generateI_Type("+","$zero",rd,immediate1);
+                
             }
             else
             {
                 string rs = getReg(IRtable[i].arg1Index);
-                generateR_Type(op,rs,"$zero",rd);
+                generateR_Type("+",rs,"$zero",rd);
             }
         }
         else if(op == "if")
@@ -202,6 +243,9 @@ void Compile()    //生成MIPS汇编代码
 
         
     }
+    for(int j=0;j<destination.size();j++)
+        if(destination[j] == IRnum)
+            cout<<"position"<<IRnum<<": ";
 }
 
 
