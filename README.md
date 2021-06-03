@@ -1,4 +1,5 @@
 # Compilation-principle-Lab
+编译原理实验，实现一个可以生成MIPS汇编代码的编译器
 TO DO:
 
 ~~(1)将抽象语法树转换成四元式~~
