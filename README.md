@@ -1,5 +1,5 @@
 # Compilation-principle-Lab
-编译原理实验，实现一个可以生成MIPS汇编代码的编译器
+重庆大学计算机学院编译原理实验，实现一个可以生成MIPS汇编代码的编译器
 
 TO DO:
 
